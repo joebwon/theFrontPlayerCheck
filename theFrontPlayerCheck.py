@@ -64,7 +64,7 @@ def process_join(steam_id, player_name):
                 f"NumberOfGameBans: {player_info['NumberOfGameBans']}"
             )
             log_to_file(log_message)
-            send_to_discord('https://discord.com/api/webhooks/1172583162107404308/s15-h8Eqz1KCfdRg7_4vAjKHWgvJsrKf3sPcKOBiNET6_ggvULY8ERaUMC9LA233vGZ0', log_message)
+            send_to_discord('DISCORD_WEBHOOK', log_message)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching player bans: {e}")
 
@@ -72,7 +72,7 @@ def process_join(steam_id, player_name):
 def process_leave(steam_id):
     leave_message = f"Player with ID {steam_id} has left the server"
     log_to_file(leave_message)
-    send_to_discord('https://discord.com/api/webhooks/1172583162107404308/s15-h8Eqz1KCfdRg7_4vAjKHWgvJsrKf3sPcKOBiNET6_ggvULY8ERaUMC9LA233vGZ0', leave_message)
+    send_to_discord('DISCORD_WEBHOOK', leave_message)
 
 # Func to log the information to a file
 def log_to_file(message, log_file='player_log.txt'):
