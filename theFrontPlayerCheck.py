@@ -16,12 +16,15 @@ api = WebAPI(key=api_key)
 # Get Discord webhook from .env file
 webhook_url = os.getenv('DISCORD_WEBHOOK')
 
+
 # Func to send to discord
 def send_to_discord(webhook_url, message):
     data = {"content": message}
     response = requests.post(webhook_url, json=data)
     if response.status_code != 204:
-        print(f"Error sending message to Discord: {response.status_code} - {response.text}")
+        print(f"Error sending message to Discord: \
+              {response.status_code} - {response.text}")
+
 
 # Log watcher def
 def watch_log_file(log_file_path):
@@ -40,6 +43,7 @@ def watch_log_file(log_file_path):
 
         time.sleep(5)
 
+
 # This defines what to look for in log entries
 def process_line(line):
     # Check for join requests
@@ -56,6 +60,7 @@ def process_line(line):
             steam_id = leave_match.group(1)
             process_leave(steam_id)
 
+
 # Tattle tail when they join
 def process_join(steam_id, player_name):
     try:
@@ -63,16 +68,22 @@ def process_join(steam_id, player_name):
         if response and 'players' in response:
             player_info = response['players'][0]
             log_message = (
-                f"Player connected to The Front Salt Mine server Name:{player_name} "
-                f"SteamID: {player_info['SteamId']} VacBanned: {player_info['VACBanned']} "
-                f"NumberOfVACBans: {player_info['NumberOfVACBans']} "
-                f"DaysSinceLastBan: {player_info['DaysSinceLastBan']} "
-                f"NumberOfGameBans: {player_info['NumberOfGameBans']}"
+                f"Player connected to The Front server Name: \
+                    {player_name} "
+                f"SteamID: {player_info['SteamId']} \
+                    VacBanned: {player_info['VACBanned']} "
+                f"NumberOfVACBans: \
+                    {player_info['NumberOfVACBans']} "
+                f"DaysSinceLastBan: \
+                    {player_info['DaysSinceLastBan']} "
+                f"NumberOfGameBans: \
+                    {player_info['NumberOfGameBans']}"
             )
             log_to_file(log_message)
             send_to_discord(webhook_url, log_message)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching player bans: {e}")
+
 
 # Leave event isn't much because the log just gives us steam ID.
 def process_leave(steam_id):
@@ -80,15 +91,16 @@ def process_leave(steam_id):
     log_to_file(leave_message)
     send_to_discord(webhook_url, leave_message)
 
+
 # Func to log the information to a file
 def log_to_file(message, log_file='player_log.txt'):
     with open(log_file, 'a') as file:
         file.write(message + '\n')
 
+
 # Replace this with your log file path
-#
-# log_file_path = '/thefront/TheFront/server/ProjectWar/Saved/Logs/ProjectWar.log'
 log_file_path = os.getenv('LOG_FILE_PATH')
+
 
 # Start watching the log file
 watch_log_file(log_file_path)
