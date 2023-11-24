@@ -3,12 +3,18 @@ import time
 import re
 import requests
 from steam.webapi import WebAPI
+from dotenv import load_dotenv
+import os
 
-# Put your steam API key here
-api = WebAPI(key='STEAM_API_KEY')
+# Load environment variables
+load_dotenv()
 
-# Discord webhook here
-webhook_url = 'DISCORD_WEBHOOK'
+# Get your steam API key from .env file
+api_key = os.getenv('STEAM_API_KEY')
+api = WebAPI(key=api_key)
+
+# Get Discord webhook from .env file
+webhook_url = os.getenv('DISCORD_WEBHOOK')
 
 # Func to send to discord
 def send_to_discord(webhook_url, message):
@@ -64,7 +70,7 @@ def process_join(steam_id, player_name):
                 f"NumberOfGameBans: {player_info['NumberOfGameBans']}"
             )
             log_to_file(log_message)
-            send_to_discord('DISCORD_WEBHOOK', log_message)
+            send_to_discord(webhook_url, log_message)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching player bans: {e}")
 
@@ -72,7 +78,7 @@ def process_join(steam_id, player_name):
 def process_leave(steam_id):
     leave_message = f"Player with ID {steam_id} has left the server"
     log_to_file(leave_message)
-    send_to_discord('DISCORD_WEBHOOK', leave_message)
+    send_to_discord(webhook_url, leave_message)
 
 # Func to log the information to a file
 def log_to_file(message, log_file='player_log.txt'):
@@ -80,7 +86,9 @@ def log_to_file(message, log_file='player_log.txt'):
         file.write(message + '\n')
 
 # Replace this with your log file path
-log_file_path = '/thefront/TheFront/server/ProjectWar/Saved/Logs/ProjectWar.log'
+#
+# log_file_path = '/thefront/TheFront/server/ProjectWar/Saved/Logs/ProjectWar.log'
+log_file_path = os.getenv('LOG_FILE_PATH')
 
 # Start watching the log file
 watch_log_file(log_file_path)
