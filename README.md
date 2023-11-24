@@ -8,7 +8,10 @@ Feel free to submit PRs or shoot me discord PMs for improvements, I'll try to ke
 
 # Requirements:
 python3
+
+
 A steam API key (https://steamcommunity.com/dev/apikey)
+
 A discord webhook (https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 
 # Installation Instructions (Ubuntu/Debian)
